@@ -309,6 +309,18 @@ class Database {
                 },
                 pool: mariadbPoolConfig,
             };
+        } else if (dbConfig.type === "postgres") {
+            config = {
+                client: "pg",
+                connection: {
+                    host: dbConfig.hostname,
+                    port: dbConfig.port,
+                    user: dbConfig.username,
+                    password: dbConfig.password,
+                    database: dbConfig.dbName,
+                },
+                pool: mariadbPoolConfig,
+            };
         } else {
             throw new Error("Unknown Database type: " + dbConfig.type);
         }
@@ -341,6 +353,8 @@ class Database {
             await this.initSQLite(testMode, noLog);
         } else if (dbConfig.type.endsWith("mariadb")) {
             await this.initMariaDB();
+        } else if (dbConfig.type === "postgres") {
+            await this.initPostgres();
         }
     }
 
@@ -387,6 +401,21 @@ class Database {
             await createTables();
         } else {
             log.debug("db", "MariaDB database already exists");
+        }
+    }
+
+    /**
+     * Initialize Postgres
+     * @returns {Promise<void>}
+     */
+    static async initPostgres() {
+        log.debug("db", "Checking if Postgres database exists...");
+        let hasTable = await R.hasTable("docker_host");
+        if (!hasTable) {
+            const { createTables } = require("../db/knex_init_db");
+            await createTables();
+        } else {
+            log.debug("db", "Postgres database already exists");
         }
     }
 
