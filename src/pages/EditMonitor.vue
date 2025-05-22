@@ -18,6 +18,9 @@
                                         <option value="http">
                                             HTTP(s)
                                         </option>
+                                        <option value="websocket">
+                                            WebSocket
+                                        </option>
                                         <option value="port">
                                             TCP Port
                                         </option>
@@ -116,9 +119,9 @@
                             </div>
 
                             <!-- URL -->
-                            <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query' || monitor.type === 'real-browser' " class="my-3">
+                            <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query' || monitor.type === 'real-browser' || monitor.type === 'websocket'" class="my-3">
                                 <label for="url" class="form-label">{{ $t("URL") }}</label>
-                                <input id="url" v-model="monitor.url" type="url" class="form-control" pattern="https?://.+" required data-testid="url-input">
+                                <input id="url" v-model="monitor.url" type="url" class="form-control" :pattern="monitor.type === 'websocket' ? 'wss?:\\/\\/.+' : 'https?://.+'" required data-testid="url-input">
                             </div>
 
                             <!-- gRPC URL -->
@@ -610,8 +613,8 @@
                                 <input id="retry-interval" v-model="monitor.retryInterval" type="number" class="form-control" required :min="minInterval" step="1">
                             </div>
 
-                            <!-- Timeout: HTTP / Keyword / SNMP only -->
-                            <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query' || monitor.type === 'snmp' || monitor.type === 'rabbitmq'" class="my-3">
+                            <!-- Timeout: HTTP / Keyword / SNMP / WebSocket -->
+                            <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query' || monitor.type === 'snmp' || monitor.type === 'rabbitmq' || monitor.type === 'websocket'" class="my-3">
                                 <label for="timeout" class="form-label">{{ $t("Request Timeout") }} ({{ $t("timeoutAfter", [ monitor.timeout || clampTimeout(monitor.interval) ]) }})</label>
                                 <input id="timeout" v-model="monitor.timeout" type="number" class="form-control" required min="0" step="0.1">
                             </div>
@@ -636,7 +639,7 @@
                                 </div>
                             </div>
 
-                            <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query' || monitor.type === 'redis' " class="my-3 form-check">
+                            <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query' || monitor.type === 'redis' || monitor.type === 'websocket'" class="my-3 form-check">
                                 <input id="ignore-tls" v-model="monitor.ignoreTls" class="form-check-input" type="checkbox" value="">
                                 <label class="form-check-label" for="ignore-tls">
                                     {{ monitor.type === "redis" ? $t("ignoreTLSErrorGeneral") : $t("ignoreTLSError") }}
