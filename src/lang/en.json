@@ -1098,5 +1098,8 @@
     "Phone numbers": "Phone numbers",
     "Sender name": "Sender name",
     "smsplanetNeedToApproveName": "Needs to be approved in the client panel",
+    "smsalaApiToken": "API token for the SMSala API",
+    "smsalaFrom": "Approved Sender ID",
+    "smsalaTo": "Destination Number(s)",
     "Disable URL in Notification": "Disable URL in Notification"
 }

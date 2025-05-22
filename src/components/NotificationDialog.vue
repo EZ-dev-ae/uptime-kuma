@@ -169,7 +169,8 @@ export default {
                 "gtxmessaging": "GtxMessaging",
                 "Cellsynt": "Cellsynt",
                 "SendGrid": "SendGrid",
-                "notifery": "Notifery"
+                "notifery": "Notifery",
+                "SMSala": "SMSala"
             };
 
             // Put notifications here if it's not supported in most regions or its documentation is not in English

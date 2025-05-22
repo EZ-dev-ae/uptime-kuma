@@ -75,6 +75,7 @@ import SIGNL4 from "./SIGNL4.vue";
 import SendGrid from "./SendGrid.vue";
 import YZJ from "./YZJ.vue";
 import SMSPlanet from "./SMSPlanet.vue";
+import SMSala from "./SMSala.vue";
 
 /**
  * Manage all notification form.
@@ -158,6 +159,7 @@ const NotificationFormList = {
     "SendGrid": SendGrid,
     "YZJ": YZJ,
     "SMSPlanet": SMSPlanet,
+    "SMSala": SMSala,
 };
 
 export default NotificationFormList;
