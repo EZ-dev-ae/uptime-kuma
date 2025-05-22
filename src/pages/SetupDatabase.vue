@@ -47,6 +47,11 @@
                         MariaDB/MySQL
                     </label>
 
+                    <input id="btnradio4" v-model="dbConfig.type" type="radio" class="btn-check" autocomplete="off" value="postgres">
+                    <label class="btn btn-outline-primary" for="btnradio4">
+                        Supabase/Postgres
+                    </label>
+
                     <input id="btnradio1" v-model="dbConfig.type" type="radio" class="btn-check" autocomplete="off" value="sqlite">
                     <label class="btn btn-outline-primary" for="btnradio1">
                         SQLite
@@ -61,11 +66,15 @@
                     {{ $t("setupDatabaseMariaDB") }}
                 </div>
 
+                <div v-if="dbConfig.type === 'postgres'" class="mt-3 short">
+                    {{ $t("setupDatabasePostgres") }}
+                </div>
+
                 <div v-if="dbConfig.type === 'sqlite'" class="mt-3 short">
                     {{ $t("setupDatabaseSQLite") }}
                 </div>
 
-                <template v-if="dbConfig.type === 'mariadb'">
+                <template v-if="dbConfig.type === 'mariadb' || dbConfig.type === 'postgres'">
                     <div class="form-floating mt-3 short">
                         <input id="floatingInput" v-model="dbConfig.hostname" type="text" class="form-control" required>
                         <label for="floatingInput">{{ $t("Hostname") }}</label>

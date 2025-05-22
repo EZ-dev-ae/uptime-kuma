@@ -6,6 +6,7 @@ const path = require("path");
 const Database = require("./database");
 const { allowDevAllOrigin } = require("./util-server");
 const mysql = require("mysql2/promise");
+const { Client: PgClient } = require("pg");
 
 /**
  *  A standalone express app that is used to setup a database
@@ -149,7 +150,7 @@ class SetupDatabase {
 
                 let dbConfig = request.body.dbConfig;
 
-                let supportedDBTypes = [ "mariadb", "sqlite" ];
+                let supportedDBTypes = [ "mariadb", "postgres", "sqlite" ];
 
                 if (this.isEnabledEmbeddedMariaDB()) {
                     supportedDBTypes.push("embedded-mariadb");
@@ -216,6 +217,56 @@ class SetupDatabase {
                         });
                         await connection.execute("SELECT 1");
                         connection.end();
+                    } catch (e) {
+                        response.status(400).json("Cannot connect to the database: " + e.message);
+                        this.runningSetup = false;
+                        return;
+                    }
+                }
+
+                // External Postgres
+                if (dbConfig.type === "postgres") {
+                    if (!dbConfig.hostname) {
+                        response.status(400).json("Hostname is required");
+                        this.runningSetup = false;
+                        return;
+                    }
+
+                    if (!dbConfig.port) {
+                        response.status(400).json("Port is required");
+                        this.runningSetup = false;
+                        return;
+                    }
+
+                    if (!dbConfig.dbName) {
+                        response.status(400).json("Database name is required");
+                        this.runningSetup = false;
+                        return;
+                    }
+
+                    if (!dbConfig.username) {
+                        response.status(400).json("Username is required");
+                        this.runningSetup = false;
+                        return;
+                    }
+
+                    if (!dbConfig.password) {
+                        response.status(400).json("Password is required");
+                        this.runningSetup = false;
+                        return;
+                    }
+
+                    try {
+                        const client = new PgClient({
+                            host: dbConfig.hostname,
+                            port: dbConfig.port,
+                            user: dbConfig.username,
+                            password: dbConfig.password,
+                            database: dbConfig.dbName,
+                        });
+                        await client.connect();
+                        await client.query("SELECT 1");
+                        await client.end();
                     } catch (e) {
                         response.status(400).json("Cannot connect to the database: " + e.message);
                         this.runningSetup = false;
