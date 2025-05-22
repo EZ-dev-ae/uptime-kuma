@@ -76,6 +76,7 @@ const Wpush = require("./notification-providers/wpush");
 const SendGrid = require("./notification-providers/send-grid");
 const YZJ = require("./notification-providers/yzj");
 const SMSPlanet = require("./notification-providers/sms-planet");
+const SMSala = require("./notification-providers/smsala");
 const SpugPush = require("./notification-providers/spugpush");
 
 class Notification {
@@ -169,6 +170,7 @@ class Notification {
             new SendGrid(),
             new YZJ(),
             new SMSPlanet(),
+            new SMSala(),
             new SpugPush(),
             new Notifery(),
         ];
